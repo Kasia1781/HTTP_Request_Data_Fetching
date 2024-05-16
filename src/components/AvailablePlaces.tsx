@@ -1,3 +1,5 @@
+import Places from './Places';
+
 export default function AvailablePlaces() {
-	return <p>Places</p>;
+	return <Places />;
 }
