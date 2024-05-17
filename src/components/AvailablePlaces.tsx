@@ -22,7 +22,7 @@ export default function AvailablePlaces() {
 			setIsFetching(true);
 			try {
 				const data = (await fetchAvailablePlaces(
-					'http://localhost:3000/placess'
+					'http://localhost:3000/places'
 				)) as AvailablePlacesProps;
 
 				setAvailablePlaces(data.places);
@@ -47,7 +47,7 @@ export default function AvailablePlaces() {
 	}
 
 	if (availablePlaces) {
-		content = <Places />;
+		content = <Places places={availablePlaces} />;
 	}
 
 	return (
