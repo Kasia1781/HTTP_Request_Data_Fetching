@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from 'react';
 import Places, { PlaceProps } from './Places';
 import { fetchAvailablePlaces } from '../util/http';
+import ErrorMessage from './ErrorMessage';
 
 type AvailablePlacesProps = {
 	id: number;
@@ -43,7 +44,7 @@ export default function AvailablePlaces() {
 	}
 
 	if (error) {
-		content = <p>{error}</p>;
+		content = <ErrorMessage title='Wystąpił błąd!' message={error} />;
 	}
 
 	if (availablePlaces) {
@@ -56,10 +57,5 @@ export default function AvailablePlaces() {
 		);
 	}
 
-	return (
-		<>
-			<h1>Hello</h1>
-			{content}
-		</>
-	);
+	return <>{content}</>;
 }

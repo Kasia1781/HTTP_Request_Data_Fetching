@@ -11,9 +11,15 @@ type PlacesProps = {
 	places: PlaceProps[];
 	title: string;
 	fallbackText: string;
+	isLoading: boolean;
 };
 
-export default function Places({ places, title, fallbackText }: PlacesProps) {
+export default function Places({
+	places,
+	title,
+	fallbackText,
+	isLoading,
+}: PlacesProps) {
 	return (
 		<section className='places-category'>
 			<h2>{title}</h2>
