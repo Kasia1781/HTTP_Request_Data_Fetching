@@ -47,7 +47,13 @@ export default function AvailablePlaces() {
 	}
 
 	if (availablePlaces) {
-		content = <Places places={availablePlaces} />;
+		content = (
+			<Places
+				title='AvailablePlaces'
+				places={availablePlaces}
+				fallbackText='No places available'
+			/>
+		);
 	}
 
 	return (

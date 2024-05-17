@@ -1,6 +1,7 @@
 import './App.css';
 import logoImg from './assets/logo.png';
 import AvailablePlaces from './components/AvailablePlaces';
+import Places from './components/Places';
 
 function App() {
 	return (
@@ -14,6 +15,11 @@ function App() {
 				</p>
 			</header>
 			<main>
+				<Places
+					places={[]}
+					title='I would like to visit ...'
+					fallbackText='Select the places you would like to visit below.'
+				/>
 				<AvailablePlaces />
 			</main>
 		</>
