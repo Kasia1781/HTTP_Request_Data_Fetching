@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import logoImg from './assets/logo.png';
 import AvailablePlaces from './components/AvailablePlaces';
 import Places from './components/Places';
+import { updateUserPlaces } from './util/http';
 
 function App() {
 	type UserPlace = {
@@ -23,10 +24,12 @@ function App() {
 		};
 	};
 
-	const [userPlaces, setUserPlaces] = useState<usePlacesProps>([]);
+	const [userPlaces, setUserPlaces] = useState<usePlacesProps[]>([]);
+	const [error, setError] = useState<string>();
+
 	console.log(userPlaces);
 
-	function handleSelectedPlaces(userPlace: UserPlace) {
+	async function handleSelectedPlaces(userPlace: UserPlace) {
 		setUserPlaces((prevState) => {
 			const newUserPlaces: usePlacesProps = {
 				id: userPlace.id,
@@ -39,6 +42,15 @@ function App() {
 			}
 			return [...prevState, newUserPlaces];
 		});
+
+		try {
+			await updateUserPlaces([userPlace, ...userPlaces]);
+		} catch (error) {
+			setUserPlaces(userPlaces);
+			if (error instanceof Error) {
+				setError(error.message);
+			}
+		}
 	}
 
 	return (

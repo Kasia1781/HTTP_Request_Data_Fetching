@@ -12,9 +12,9 @@ export async function fetchAvailablePlaces(url: string) {
 	}
 }
 
-export async function updateUserPlaces(places: string[], url: string) {
+export async function updateUserPlaces(places: string[]) {
 	try {
-		const response = await fetch(url, {
+		const response = await fetch('http://localhost:3000/user-places', {
 			method: 'PUT',
 			body: JSON.stringify({ places }),
 			headers: {
