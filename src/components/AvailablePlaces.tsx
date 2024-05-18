@@ -11,16 +11,15 @@ type AvailablePlacesProps = {
 		alt: string;
 	};
 	title: string;
+	onSelectedPlaces: () => void;
 };
 
-export default function AvailablePlaces() {
+export default function AvailablePlaces({ onSelectedPlaces }) {
 	const [availablePlaces, setAvailablePlaces] = useState<PlaceProps[]>();
 	const [isFetching, setIsFetching] = useState(false);
 	const [error, setError] = useState<string>();
 
 	const modal = useRef<ModalHandle>(null);
-
-	console.log(availablePlaces);
 
 	useEffect(() => {
 		async function fetchPlaces() {
@@ -73,6 +72,7 @@ export default function AvailablePlaces() {
 				title='AvailablePlaces'
 				places={availablePlaces}
 				fallbackText='No places available'
+				onSelectedPlace={onSelectedPlaces}
 			/>
 		);
 	}

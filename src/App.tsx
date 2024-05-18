@@ -1,9 +1,46 @@
+import { useState } from 'react';
 import './App.css';
 import logoImg from './assets/logo.png';
 import AvailablePlaces from './components/AvailablePlaces';
 import Places from './components/Places';
 
 function App() {
+	type UserPlace = {
+		id: number;
+		title: string;
+		image: {
+			src: string;
+			alt: string;
+		};
+	};
+
+	type usePlacesProps = {
+		id: number;
+		title: string;
+		image: {
+			src: string;
+			alt: string;
+		};
+	};
+
+	const [userPlaces, setUserPlaces] = useState<usePlacesProps>([]);
+	console.log(userPlaces);
+
+	function handleSelectedPlaces(userPlace: UserPlace) {
+		setUserPlaces((prevState) => {
+			const newUserPlaces: usePlacesProps = {
+				id: userPlace.id,
+				title: userPlace.title,
+				image: userPlace.image,
+			};
+
+			if (prevState.some((place) => place.id === userPlace.id)) {
+				return prevState;
+			}
+			return [...prevState, newUserPlaces];
+		});
+	}
+
 	return (
 		<>
 			<header>
@@ -16,11 +53,11 @@ function App() {
 			</header>
 			<main>
 				<Places
-					places={[]}
+					places={userPlaces}
 					title='I would like to visit ...'
 					fallbackText='Select the places you would like to visit below.'
 				/>
-				<AvailablePlaces />
+				<AvailablePlaces onSelectedPlaces={handleSelectedPlaces} />
 			</main>
 		</>
 	);

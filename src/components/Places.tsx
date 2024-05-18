@@ -11,14 +11,14 @@ type PlacesProps = {
 	places: PlaceProps[];
 	title: string;
 	fallbackText: string;
-	isLoading: boolean;
+	onSelectedPlace: () => void;
 };
 
 export default function Places({
 	places,
 	title,
 	fallbackText,
-	isLoading,
+	onSelectedPlace,
 }: PlacesProps) {
 	return (
 		<section className='places-category'>
@@ -28,7 +28,7 @@ export default function Places({
 				<ul className='places'>
 					{places.map((place) => (
 						<li key={place.id} className='place-item'>
-							<button>
+							<button onClick={() => onSelectedPlace(place)}>
 								<img
 									src={`http://localhost:3000/${place.image.src}`}
 									alt={place.image.alt}
