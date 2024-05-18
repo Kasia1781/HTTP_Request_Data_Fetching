@@ -1,7 +1,8 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import Places, { PlaceProps } from './Places';
 import { fetchAvailablePlaces } from '../util/http';
 import ErrorMessage from './ErrorMessage';
+import Modal, { ModalHandle } from './Modal';
 
 type AvailablePlacesProps = {
 	id: number;
@@ -16,6 +17,9 @@ export default function AvailablePlaces() {
 	const [availablePlaces, setAvailablePlaces] = useState<PlaceProps[]>();
 	const [isFetching, setIsFetching] = useState(false);
 	const [error, setError] = useState<string>();
+
+	const modal = useRef<ModalHandle>(null);
+
 	console.log(availablePlaces);
 
 	useEffect(() => {
@@ -44,7 +48,23 @@ export default function AvailablePlaces() {
 	}
 
 	if (error) {
-		content = <ErrorMessage title='Wystąpił błąd!' message={error} />;
+		modal.current?.open();
+	}
+
+	function closeModal() {
+		modal.current?.close();
+	}
+
+	if (error) {
+		content = (
+			<Modal ref={modal} onClose={closeModal}>
+				<ErrorMessage
+					title='Wystąpił błąd!'
+					message={error}
+					onClose={closeModal}
+				/>
+			</Modal>
+		);
 	}
 
 	if (availablePlaces) {
