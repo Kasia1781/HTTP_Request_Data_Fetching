@@ -62,7 +62,11 @@ function App() {
 		});
 
 		try {
-			await updateUserPlaces([userPlace, ...userPlaces]);
+			const updatedPlaces = [...userPlaces, userPlace].filter(
+				(place, index, self) =>
+					index === self.findIndex((p) => p.id === place.id)
+			);
+			await updateUserPlaces(updatedPlaces);
 		} catch (error) {
 			setUserPlaces(userPlaces);
 			if (error instanceof Error) {
