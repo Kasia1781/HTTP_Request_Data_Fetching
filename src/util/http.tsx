@@ -34,3 +34,16 @@ export async function updateUserPlaces(places: string[]) {
 		throw new Error('Błąd sieciowy lub serwerowy');
 	}
 }
+
+//pobieramy zapisane w pliku user-places.json dane
+export async function fetchUserPlaces() {
+	const response = await fetch('http://localhost:3000/user-places');
+
+	const resData = (await response.json()) as unknown;
+
+	if (!response.ok) {
+		throw new Error('Nie udało się pobrać zdjęć zapisanych przez użytkownika!');
+	}
+
+	return resData.places;
+}
