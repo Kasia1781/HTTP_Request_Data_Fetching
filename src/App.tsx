@@ -3,7 +3,7 @@ import './App.css';
 import logoImg from './assets/logo.png';
 import AvailablePlaces from './components/AvailablePlaces';
 import Places from './components/Places';
-import { updateUserPlaces } from './util/http';
+import { fetchUserPlaces, updateUserPlaces } from './util/http';
 import ErrorMessage from './components/ErrorMessage';
 import Modal, { ModalHandle } from './components/Modal';
 
@@ -28,7 +28,24 @@ function App() {
 
 	const [userPlaces, setUserPlaces] = useState<usePlacesProps[]>([]);
 	const [error, setError] = useState<string | null>(null);
+	const [isFetching, setIsFetching] = useState<boolean>(false);
 	const modal = useRef<ModalHandle>(null);
+
+	useEffect(() => {
+		async function fetchPlaces() {
+			setIsFetching(true);
+			try {
+				const places = await fetchUserPlaces();
+				setUserPlaces(places);
+			} catch (error) {
+				if (error instanceof Error) {
+					setError(error.message);
+				}
+			}
+			setIsFetching(false);
+		}
+		fetchPlaces();
+	}, []);
 
 	async function handleSelectedPlaces(userPlace: UserPlace) {
 		setUserPlaces((prevState) => {
@@ -92,11 +109,24 @@ function App() {
 				</p>
 			</header>
 			<main>
-				<Places
-					places={userPlaces}
-					title='I would like to visit ...'
-					fallbackText='Select the places you would like to visit below.'
-				/>
+				{error && (
+					<Modal ref={modal} onClose={closeModal}>
+						<ErrorMessage
+							title='Nie udało się pobrać zdjęć zapisanych prz użytkownika!'
+							message={error}
+							onClose={handleError}
+						/>
+					</Modal>
+				)}
+				{!error && (
+					<Places
+						places={userPlaces}
+						title='I would like to visit ...'
+						fallbackText='Select the places you would like to visit below.'
+						isLoading={isFetching}
+					/>
+				)}
+
 				<AvailablePlaces onSelectedPlaces={handleSelectedPlaces} />
 			</main>
 		</>

@@ -37,13 +37,19 @@ export async function updateUserPlaces(places: string[]) {
 
 //pobieramy zapisane w pliku user-places.json dane
 export async function fetchUserPlaces() {
-	const response = await fetch('http://localhost:3000/user-places');
+	try {
+		const response = await fetch('http://localhost:3000/user-places');
+		if (!response.ok) {
+			throw new Error(
+				'Nie udało się pobrać zdjęć zapisanych przez użytkownika!'
+			);
+		}
+		const resData = (await response.json()) as unknown;
+		console.log(resData);
 
-	const resData = (await response.json()) as unknown;
-
-	if (!response.ok) {
-		throw new Error('Nie udało się pobrać zdjęć zapisanych przez użytkownika!');
+		return resData.places;
+	} catch (error) {
+		console.error('Błąd:', error);
+		throw new Error('Błąd sieciowy lub serwerowy!');
 	}
-
-	return resData.places;
 }

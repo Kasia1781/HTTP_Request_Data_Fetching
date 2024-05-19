@@ -12,6 +12,7 @@ type PlacesProps = {
 	title: string;
 	fallbackText: string;
 	onSelectedPlace: () => void;
+	isLoading: boolean;
 };
 
 export default function Places({
@@ -19,10 +20,12 @@ export default function Places({
 	title,
 	fallbackText,
 	onSelectedPlace,
+	isLoading,
 }: PlacesProps) {
 	return (
 		<section className='places-category'>
 			<h2>{title}</h2>
+			{isLoading && <p>Pobieranie danych...</p>}
 			{places.length === 0 && <p className='fallback-text'>{fallbackText}</p>}
 			{places.length > 0 && (
 				<ul className='places'>
