@@ -1,4 +1,10 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import {
+	type ReactNode,
+	useEffect,
+	useRef,
+	useState,
+	useCallback,
+} from 'react';
 import './App.css';
 import logoImg from './assets/logo.png';
 import AvailablePlaces from './components/AvailablePlaces';
@@ -6,6 +12,7 @@ import Places from './components/Places';
 import { fetchUserPlaces, updateUserPlaces } from './util/http';
 import ErrorMessage from './components/ErrorMessage';
 import Modal, { ModalHandle } from './components/Modal';
+import DeleteConfirmation from './components/DeleteConfirmation';
 
 function App() {
 	type UserPlace = {
@@ -29,7 +36,11 @@ function App() {
 	const [userPlaces, setUserPlaces] = useState<usePlacesProps[]>([]);
 	const [error, setError] = useState<string | null>(null);
 	const [isFetching, setIsFetching] = useState<boolean>(false);
+	const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+	const [confirmationKey, setConfirmationKey] = useState(0);
 	const modal = useRef<ModalHandle>(null);
+
+	const selectedPlace = useRef<UserPlace | null>(null);
 
 	useEffect(() => {
 		async function fetchPlaces() {
@@ -101,8 +112,57 @@ function App() {
 		);
 	}
 
+	function handleStartRemovePlace(place: UserPlace) {
+		setModalIsOpen(true);
+		selectedPlace.current = place;
+		setConfirmationKey((prevKey) => prevKey + 1);
+		if (modal.current) {
+			modal.current?.open();
+		}
+	}
+
+	function handleStopRemovePlace() {
+		setModalIsOpen(false);
+
+		if (modal.current) {
+			modal.current?.close();
+		}
+	}
+
+	const handleRemovePlace = useCallback(
+		async function handleRemovePlace() {
+			setUserPlaces((prevPickedPlaces) =>
+				prevPickedPlaces.filter(
+					(place) => place.id !== selectedPlace.current?.id
+				)
+			);
+
+			try {
+				await updateUserPlaces(
+					userPlaces.filter((place) => place.id !== selectedPlace.current.id)
+				);
+				handleStopRemovePlace();
+			} catch (error) {
+				setUserPlaces(userPlaces);
+				if (error instanceof Error) {
+					setError(error.message);
+				}
+			}
+
+			setModalIsOpen(false);
+		},
+		[userPlaces]
+	);
+
 	return (
 		<>
+			<Modal open={modalIsOpen} ref={modal} onClose={handleStopRemovePlace}>
+				<DeleteConfirmation
+					onCancel={handleStopRemovePlace}
+					onConfirm={handleRemovePlace}
+					key={confirmationKey}
+				/>
+			</Modal>
 			{content}
 			<header>
 				<img src={logoImg} alt='logo' />
@@ -128,6 +188,7 @@ function App() {
 						title='I would like to visit ...'
 						fallbackText='Select the places you would like to visit below.'
 						isLoading={isFetching}
+						onSelectedPlace={handleStartRemovePlace}
 					/>
 				)}
 

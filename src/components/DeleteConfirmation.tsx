@@ -6,7 +6,7 @@ type DeleteConfirmationProps = {
 	onCancel: () => void;
 };
 
-const TIMER = 3000;
+const TIMER = 9000;
 
 export default function DeleteConfirmation({
 	onConfirm,

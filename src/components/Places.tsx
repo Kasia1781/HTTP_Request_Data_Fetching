@@ -11,7 +11,7 @@ type PlacesProps = {
 	places: PlaceProps[];
 	title: string;
 	fallbackText: string;
-	onSelectedPlace: () => void;
+	onSelectedPlace: (place: PlaceProps) => void;
 	isLoading: boolean;
 };
 

@@ -45,7 +45,6 @@ export async function fetchUserPlaces() {
 			);
 		}
 		const resData = (await response.json()) as unknown;
-		console.log(resData);
 
 		return resData.places;
 	} catch (error) {
