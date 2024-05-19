@@ -31,7 +31,7 @@ export async function updateUserPlaces(places: string[]) {
 		return resData.message;
 	} catch (error) {
 		console.error('Błąd:', error);
-		throw new Error('Błąd sieciowy lub serwerowy');
+		throw new Error('Błąd sieciowy lub serwerowy!');
 	}
 }
 
